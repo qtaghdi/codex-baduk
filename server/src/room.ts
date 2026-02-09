@@ -62,8 +62,16 @@ export class Room implements DurableObject {
   private onMessage(socket: WebSocket, data: ClientToServerMessage) {
     this.tick();
 
+    if (data.type === 'ping') {
+      this.send(socket, { type: 'pong', ts: data.ts });
+      return;
+    }
+
     if (data.type === 'create_room') {
-      if (this.room && this.room.players.length > 0) return;
+      if (this.room && this.room.players.length > 0) {
+        this.send(socket, { type: 'error', message: '이미 방이 생성되어 있습니다.' });
+        return;
+      }
       const host: PlayerInfo = { id: crypto.randomUUID(), name: data.name, color: 'B' };
       const game = createGame(data.size, data.komi);
       game.phase = 'lobby';
@@ -85,9 +93,11 @@ export class Room implements DurableObject {
       return;
     }
 
-    if (!this.room) return;
-
     if (data.type === 'join_room') {
+      if (!this.room) {
+        this.send(socket, { type: 'error', message: '방이 아직 생성되지 않았습니다.' });
+        return;
+      }
       if (this.room.players.length >= 2) {
         this.send(socket, { type: 'error', message: '방이 가득 찼습니다.' });
         return;
@@ -105,6 +115,8 @@ export class Room implements DurableObject {
       this.ensureTimer();
       return;
     }
+
+    if (!this.room) return;
 
     if (data.type === 'chat') {
       const meta = this.sockets.get(socket);
