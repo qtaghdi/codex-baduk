@@ -37,7 +37,9 @@ const randomLegalMove = (state: GameState) => {
 const App: React.FC = () => {
   const [view, setView] = useState<'home' | 'room' | 'solo'>('home');
   const [name, setName] = useState('');
-  const [serverUrl, setServerUrl] = useState('http://localhost:8787');
+  const [serverUrl, setServerUrl] = useState(
+    import.meta.env.VITE_SERVER_URL ?? 'http://localhost:8787'
+  );
   const [roomId, setRoomId] = useState('');
   const [boardSize, setBoardSize] = useState(19);
   const [komi, setKomi] = useState(6.5);
