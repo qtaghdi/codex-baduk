@@ -1,0 +1,15 @@
+{
+  "name": "go-server",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250202.0",
+    "typescript": "^5.4.5",
+    "wrangler": "^3.99.0"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "go-desktop-app",
+  "private": true,
+  "workspaces": ["web", "server", "shared"]
+}
